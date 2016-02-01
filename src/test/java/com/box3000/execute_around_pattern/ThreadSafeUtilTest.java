@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 
 public class ThreadSafeUtilTest {
 
-
     @Test
     public void simpleCase() {
         StringBuilder sb = new StringBuilder();
@@ -18,21 +17,20 @@ public class ThreadSafeUtilTest {
 
     @Test
     public void parallelCase() {
-
-        final StringBuilder actual = new StringBuilder();
         final StringBuffer expected = new StringBuffer();
+        final StringBuilder actual = new StringBuilder();
 
-        IntStream.range(0, 100).parallel().forEach(i -> ThreadSafeUtil.withLock(() -> {
-            expected.append("<").append(i).append(">\n");
-            
-            actual.append("<");
-            Thread.sleep(50);
-            actual.append(i);
-            Thread.sleep(50);
-            actual.append(">\n");
-        }));
-        System.out.println(actual);
+        IntStream.range(0, 100).parallel().forEach(i
+                -> ThreadSafeUtil.withLock(() -> {
+                    expected.append("<").append(i).append(">\n");
 
-        assertEquals("Both Strings should be same", expected.toString(), actual.toString());
+                    actual.append("<");
+                    Thread.sleep(50);
+                    actual.append(i);
+                    Thread.sleep(50);
+                    actual.append(">\n");
+                }));
+
+        assertEquals(expected.toString(), actual.toString());
     }
 }
