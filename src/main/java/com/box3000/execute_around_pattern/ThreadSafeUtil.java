@@ -14,7 +14,6 @@ public final class ThreadSafeUtil {
     private static final Lock lock = new ReentrantLock();
 
     public static void withLock(ThreadSafeRegion tsr) {
-
         lock.lock();
         try {
             tsr.apply();
@@ -27,7 +26,6 @@ public final class ThreadSafeUtil {
 
     @FunctionalInterface
     public interface ThreadSafeRegion {
-
         void apply() throws InterruptedException;
     }
 }
