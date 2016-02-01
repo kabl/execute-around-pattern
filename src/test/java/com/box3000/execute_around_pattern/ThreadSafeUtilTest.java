@@ -12,7 +12,6 @@ public class ThreadSafeUtilTest {
     @Test
     public void simpleCase() {
         StringBuilder sb = new StringBuilder();
-        int counter = 0;
 
         ThreadSafeUtil.withLock(() -> System.out.println("In Lock Util"));
     }
@@ -20,19 +19,20 @@ public class ThreadSafeUtilTest {
     @Test
     public void parallelCase() {
 
-        final StringBuilder sBuild = new StringBuilder();
-        final StringBuffer sBuff = new StringBuffer();
+        final StringBuilder actual = new StringBuilder();
+        final StringBuffer expected = new StringBuffer();
 
-        IntStream.range(0, 100).parallel().forEach((a) -> ThreadSafeUtil.withLock(() -> {
-            sBuff.append("<").append(a).append(">\n");
-            sBuild.append("<");
+        IntStream.range(0, 100).parallel().forEach(i -> ThreadSafeUtil.withLock(() -> {
+            expected.append("<").append(i).append(">\n");
+            
+            actual.append("<");
             Thread.sleep(50);
-            sBuild.append(a);
+            actual.append(i);
             Thread.sleep(50);
-            sBuild.append(">\n");
+            actual.append(">\n");
         }));
-        System.out.println(sBuild);
+        System.out.println(actual);
 
-        assertEquals("Both Strings should be same", sBuff.toString(), sBuild.toString());
+        assertEquals("Both Strings should be same", expected.toString(), actual.toString());
     }
 }

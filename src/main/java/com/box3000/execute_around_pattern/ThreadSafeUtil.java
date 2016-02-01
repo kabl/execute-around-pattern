@@ -18,10 +18,16 @@ public final class ThreadSafeUtil {
         lock.lock();
         try {
             tsr.apply();
-        }catch(InterruptedException ex){
+        } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         } finally {
             lock.unlock();
         }
+    }
+
+    @FunctionalInterface
+    public interface ThreadSafeRegion {
+
+        void apply() throws InterruptedException;
     }
 }
